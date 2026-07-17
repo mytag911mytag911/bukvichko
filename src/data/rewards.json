@@ -1,0 +1,22 @@
+[
+  { "id": "r1", "name": "Бонбон", "emoji": "🍬", "rarity": "common" },
+  { "id": "r2", "name": "Бисквитка", "emoji": "🍪", "rarity": "common" },
+  { "id": "r3", "name": "Балон", "emoji": "🎈", "rarity": "common" },
+  { "id": "r4", "name": "Мече", "emoji": "🧸", "rarity": "uncommon" },
+  { "id": "r5", "name": "Диамант", "emoji": "💎", "rarity": "rare" },
+  { "id": "r6", "name": "Звезда", "emoji": "⭐", "rarity": "uncommon" },
+  { "id": "r7", "name": "Сладолед", "emoji": "🍦", "rarity": "common" },
+  { "id": "r8", "name": "Конфета", "emoji": "🍭", "rarity": "common" },
+  { "id": "r9", "name": "Плюшка", "emoji": "🐰", "rarity": "uncommon" },
+  { "id": "r10", "name": "Корона", "emoji": "👑", "rarity": "rare" },
+  { "id": "r11", "name": "Кексче", "emoji": "🧁", "rarity": "common" },
+  { "id": "r12", "name": "Стикери", "emoji": "🎨", "rarity": "common" },
+  { "id": "r13", "name": "Пръстен", "emoji": "💍", "rarity": "rare" },
+  { "id": "r14", "name": "Книга", "emoji": "📚", "rarity": "uncommon" },
+  { "id": "r15", "name": "Торта", "emoji": "🍰", "rarity": "common" },
+  { "id": "r16", "name": "Детелина", "emoji": "🍀", "rarity": "uncommon" },
+  { "id": "r17", "name": "Трофей", "emoji": "🏆", "rarity": "rare" },
+  { "id": "r18", "name": "Робот", "emoji": "🤖", "rarity": "uncommon" },
+  { "id": "r19", "name": "Магнит", "emoji": "🧲", "rarity": "common" },
+  { "id": "r20", "name": "Ключ", "emoji": "🔑", "rarity": "rare" }
+]
