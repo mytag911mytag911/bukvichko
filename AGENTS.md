@@ -379,7 +379,7 @@ The project should become a reusable foundation for future educational games.
 - [x] Learning Mode - click letter to hear sound and auto-advance
 - [x] Challenge Mode - select 5/10/15/20 words, 3 letter options
 - [x] Reward system (10 rewards, 8 junk items)
-- [x] Collection page (rewards & junk tabs, click for full-screen view)
+- [x] Collection page (rewards & junk tabs, click for full-screen view, scrollable on mobile)
 - [x] Memory Game - 16 cards (8 pairs), flip to match letters
 - [x] LocalStorage progress saving
 - [x] Custom large cursor (👆)
@@ -424,6 +424,81 @@ npm run dev
 ```
 
 Open http://localhost:5173 in browser.
+
+## Git Repository
+
+The project is already a git repository, initialized and connected to a remote on GitHub.
+
+**Remote URL:** https://github.com/mytag911mytag911/bukvichko.git
+**Branch:** `main`
+
+### Common Git Commands
+
+**Check status:**
+```bash
+git status
+```
+Shows which files are modified, staged, or untracked.
+
+**Stage changes:**
+```bash
+git add <file>          # Stage a specific file
+git add .               # Stage all changed files
+git add src/            # Stage an entire folder
+```
+
+**Commit changes:**
+```bash
+git commit -m "Your message here"
+```
+Records staged changes with a descriptive message.
+
+**Push to remote:**
+```bash
+git push                              # Push current branch (if upstream is set)
+git push --set-upstream origin main   # Push and set upstream for first time
+```
+
+**Pull latest changes:**
+```bash
+git pull
+```
+Fetches and merges remote changes into the current branch.
+
+**View commit history:**
+```bash
+git log --oneline              # Compact history
+git log --oneline -10          # Last 10 commits
+```
+
+**View differences:**
+```bash
+git diff                       # Unstaged changes
+git diff --staged              # Staged changes (about to be committed)
+```
+
+**Undo changes:**
+```bash
+git restore <file>             # Discard unstaged changes in a file
+git restore --staged <file>    # Unstage a file without discarding changes
+```
+
+**Create a new branch:**
+```bash
+git checkout -b <branch-name>  # Create and switch to a new branch
+git checkout <branch-name>     # Switch to an existing branch
+```
+
+**Merge a branch:**
+```bash
+git merge <branch-name>
+```
+
+**Standard workflow:**
+1. `git status` — check what changed
+2. `git add <files>` — stage the files
+3. `git commit -m "message"` — commit
+4. `git push` — push to GitHub
 
 ## File Structure
 
