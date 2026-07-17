@@ -29,7 +29,7 @@ export default function Collection() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col p-4">
+    <div className="h-[100dvh] flex flex-col p-4 overflow-hidden">
       <div className="flex justify-between items-center mb-6">
         <motion.button
           initial={{ x: -50, opacity: 0 }}
