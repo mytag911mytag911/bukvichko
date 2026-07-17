@@ -10,7 +10,7 @@ import Progress from './pages/Progress';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/bukvichko">
       <div className="min-h-screen w-full overflow-hidden">
         <Routes>
           <Route path="/" element={<MainMenu />} />
