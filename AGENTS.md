@@ -411,7 +411,7 @@ The project should become a reusable foundation for future educational games.
 - [x] Main menu "🛒 Магазин" button
 - [x] `/shop` route added to App.tsx
 - [x] Eating/gulp sound effects added to audio.ts
-- [x] 6 AI-generated robot PNG images in `src/data/images/Shop/`
+- [x] 6 AI-generated robot PNG images in `public/data/images/Shop/` (must be in `public/` for Vite to serve them)
 
 ## Current Word List (src/data/words.json)
 
@@ -525,6 +525,11 @@ git merge <branch-name>
 ## File Structure
 
 ```
+public/
+  data/
+    images/
+      Shop/            - 6 robot PNG images for the shop (served as static assets by Vite)
+
 src/
   App.tsx              - Router setup
   main.tsx             - Entry point
@@ -538,7 +543,7 @@ src/
     tradeRecipes.json  - Trade cost definitions
     sounds/            - 30 MP3 files for letter pronunciation (А.mp3–Я.mp3, ь.mp3)
     images/
-      Shop/            - 6 robot PNG images for the shop (BlueBot, BlueGlassBot, GreenBot, GreyBot, OrangeBot, RedBot)
+      Shop/            - 6 robot PNG images (source copies, not served by Vite)
   components/
     WormPopup.tsx      - Animated snake/worm modal for junk eating
   pages/
