@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getProgress } from '../utils/storage';
+import { getProgress, getTotalRewardCount } from '../utils/storage';
 
 export default function MainMenu() {
   const navigate = useNavigate();
   const progress = getProgress();
+  const totalRewards = getTotalRewardCount();
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-4 gap-2 md:gap-4 overflow-hidden">
@@ -79,6 +80,18 @@ export default function MainMenu() {
         >
           🎁 Колекция
         </motion.button>
+
+        <motion.button
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.85 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/shop')}
+          className="game-button bg-gradient-to-r from-fun-green to-fun-cyan text-shadow"
+        >
+          🛒 Магазин
+        </motion.button>
       </div>
 
       <div className="flex gap-3 shrink-0">
@@ -115,7 +128,7 @@ export default function MainMenu() {
       >
         <span> letters: {progress.learnedLetters.length}</span>
         <span> wins: {progress.challengeWins}</span>
-        <span> rewards: {progress.collectedRewards.length}</span>
+        <span> rewards: {totalRewards}</span>
       </motion.div>
     </div>
   );

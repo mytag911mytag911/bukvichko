@@ -1,4 +1,5 @@
 import { GameProgress, GameSettings } from '../types';
+import tradeRecipes from '../data/tradeRecipes.json';
 
 const PROGRESS_KEY = 'bukvichko_progress';
 const SETTINGS_KEY = 'bukvichko_settings';
@@ -7,8 +8,9 @@ const defaultProgress: GameProgress = {
   learnedLetters: [],
   challengeWins: 0,
   challengeLosses: 0,
-  collectedRewards: [],
-  collectedJunk: [],
+  collectedRewards: {},
+  collectedJunk: {},
+  tradedItems: {},
   totalGamesPlayed: 0,
 };
 
@@ -17,16 +19,48 @@ const defaultSettings: GameSettings = {
   musicEnabled: true,
 };
 
+function migrateProgress(progress: any): GameProgress {
+  if (Array.isArray(progress.collectedRewards)) {
+    const migrated: Record<string, number> = {};
+    progress.collectedRewards.forEach((id: string) => {
+      migrated[id] = (migrated[id] || 0) + 1;
+    });
+    progress.collectedRewards = migrated;
+  }
+
+  if (Array.isArray(progress.collectedJunk)) {
+    const migrated: Record<string, number> = {};
+    progress.collectedJunk.forEach((id: string) => {
+      migrated[id] = (migrated[id] || 0) + 1;
+    });
+    progress.collectedJunk = migrated;
+  }
+
+  if (!progress.tradedItems) {
+    progress.tradedItems = {};
+  }
+
+  if (!progress.collectedRewards || typeof progress.collectedRewards !== 'object') {
+    progress.collectedRewards = {};
+  }
+  if (!progress.collectedJunk || typeof progress.collectedJunk !== 'object') {
+    progress.collectedJunk = {};
+  }
+
+  return progress as GameProgress;
+}
+
 export function getProgress(): GameProgress {
   try {
     const stored = localStorage.getItem(PROGRESS_KEY);
     if (stored) {
-      return { ...defaultProgress, ...JSON.parse(stored) };
+      const parsed = JSON.parse(stored);
+      return migrateProgress({ ...defaultProgress, ...parsed });
     }
   } catch {
     console.error('Failed to load progress');
   }
-  return defaultProgress;
+  return { ...defaultProgress };
 }
 
 export function saveProgress(progress: GameProgress): void {
@@ -48,9 +82,7 @@ export function addLearnedLetter(letter: string): GameProgress {
 
 export function addReward(rewardId: string): GameProgress {
   const progress = getProgress();
-  if (!progress.collectedRewards.includes(rewardId)) {
-    progress.collectedRewards.push(rewardId);
-  }
+  progress.collectedRewards[rewardId] = (progress.collectedRewards[rewardId] || 0) + 1;
   progress.challengeWins++;
   progress.totalGamesPlayed++;
   saveProgress(progress);
@@ -59,13 +91,64 @@ export function addReward(rewardId: string): GameProgress {
 
 export function addJunk(junkId: string): GameProgress {
   const progress = getProgress();
-  if (!progress.collectedJunk.includes(junkId)) {
-    progress.collectedJunk.push(junkId);
-  }
+  progress.collectedJunk[junkId] = (progress.collectedJunk[junkId] || 0) + 1;
   progress.challengeLosses++;
   progress.totalGamesPlayed++;
   saveProgress(progress);
   return progress;
+}
+
+export function getTotalRewardCount(): number {
+  const progress = getProgress();
+  return Object.values(progress.collectedRewards).reduce((sum, count) => sum + count, 0);
+}
+
+export function getTotalJunkCount(): number {
+  const progress = getProgress();
+  return Object.values(progress.collectedJunk).reduce((sum, count) => sum + count, 0);
+}
+
+export function getRewardCount(rewardId: string): number {
+  const progress = getProgress();
+  return progress.collectedRewards[rewardId] || 0;
+}
+
+export function getJunkCount(junkId: string): number {
+  const progress = getProgress();
+  return progress.collectedJunk[junkId] || 0;
+}
+
+export function canAfford(shopItemId: string): boolean {
+  const recipe = tradeRecipes[shopItemId as keyof typeof tradeRecipes];
+  if (!recipe) return false;
+  const progress = getProgress();
+  return Object.entries(recipe).every(([rewardId, needed]) => {
+    const owned = progress.collectedRewards[rewardId] || 0;
+    return owned >= needed;
+  });
+}
+
+export function tradeRewards(shopItemId: string): boolean {
+  if (!canAfford(shopItemId)) return false;
+
+  const recipe = tradeRecipes[shopItemId as keyof typeof tradeRecipes];
+  const progress = getProgress();
+
+  Object.entries(recipe).forEach(([rewardId, needed]) => {
+    progress.collectedRewards[rewardId] -= needed;
+    if (progress.collectedRewards[rewardId] <= 0) {
+      delete progress.collectedRewards[rewardId];
+    }
+  });
+
+  progress.tradedItems[shopItemId] = (progress.tradedItems[shopItemId] || 0) + 1;
+  saveProgress(progress);
+  return true;
+}
+
+export function getTradedItemCount(shopItemId: string): number {
+  const progress = getProgress();
+  return progress.tradedItems[shopItemId] || 0;
 }
 
 export function getSettings(): GameSettings {

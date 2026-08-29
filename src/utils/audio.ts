@@ -68,6 +68,19 @@ export function playClickSound(): void {
   playTone(800, 0.1);
 }
 
+export function playEatingSound(): void {
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      playTone(300 + i * 50, 0.08, 'square');
+    }, i * 100);
+  }
+}
+
+export function playGulpSound(): void {
+  playTone(200, 0.2, 'sine');
+  setTimeout(() => playTone(150, 0.3, 'sine'), 150);
+}
+
 export function stopAllSounds(): void {
   window.speechSynthesis?.cancel();
 }

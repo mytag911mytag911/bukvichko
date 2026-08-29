@@ -18,12 +18,26 @@ export interface JunkItem {
   emoji: string;
 }
 
+export interface ShopItem {
+  id: string;
+  name: string;
+  emoji: string;
+  image: string;
+  category: 'robot';
+  rarity: 'common' | 'uncommon' | 'rare';
+}
+
+export interface TradeRecipe {
+  [rewardId: string]: number;
+}
+
 export interface GameProgress {
   learnedLetters: string[];
   challengeWins: number;
   challengeLosses: number;
-  collectedRewards: string[];
-  collectedJunk: string[];
+  collectedRewards: Record<string, number>;
+  collectedJunk: Record<string, number>;
+  tradedItems: Record<string, number>;
   totalGamesPlayed: number;
 }
 

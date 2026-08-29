@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import rewards from '../data/rewards.json';
 import junkItems from '../data/junkItems.json';
-import { getProgress } from '../utils/storage';
+import { getProgress, getTotalRewardCount, getTotalJunkCount } from '../utils/storage';
+import { feedWorm } from '../utils/worm';
+import WormPopup from '../components/WormPopup';
 
 type Tab = 'rewards' | 'junk';
 
@@ -14,11 +16,39 @@ interface SelectedItem {
   type: 'reward' | 'junk';
 }
 
+interface EatenItem {
+  id: string;
+  name: string;
+  emoji: string;
+  count: number;
+}
+
 export default function Collection() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('rewards');
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
-  const progress = getProgress();
+  const [showWorm, setShowWorm] = useState(false);
+  const [wormEatenItems, setWormEatenItems] = useState<EatenItem[]>([]);
+  const [progress, setProgress] = useState(getProgress());
+
+  useEffect(() => {
+    const totalJunk = getTotalJunkCount();
+    const totalRewards = getTotalRewardCount();
+
+    if (totalJunk > totalRewards) {
+      const eatenItems = feedWorm();
+      if (eatenItems.length > 0) {
+        setWormEatenItems(eatenItems);
+        setShowWorm(true);
+        setProgress(getProgress());
+      }
+    }
+  }, []);
+
+  const handleWormClose = () => {
+    setShowWorm(false);
+    setProgress(getProgress());
+  };
 
   const handleItemClick = (item: SelectedItem) => {
     setSelectedItem(item);
@@ -27,6 +57,9 @@ export default function Collection() {
   const handleClose = () => {
     setSelectedItem(null);
   };
+
+  const totalRewardCount = getTotalRewardCount();
+  const totalJunkCount = getTotalJunkCount();
 
   return (
     <div className="h-[100dvh] flex flex-col p-4 overflow-hidden">
@@ -63,7 +96,7 @@ export default function Collection() {
               : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
           }`}
         >
-          🏆 Награди ({progress.collectedRewards.length}/{rewards.length})
+          🏆 Награди ({totalRewardCount})
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -75,7 +108,7 @@ export default function Collection() {
               : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
           }`}
         >
-          🗑️ Боклучета ({progress.collectedJunk.length}/{junkItems.length})
+          🗑️ Боклучета ({totalJunkCount})
         </motion.button>
       </div>
 
@@ -90,7 +123,8 @@ export default function Collection() {
               className="grid grid-cols-4 md:grid-cols-6 gap-3 p-2"
             >
               {rewards.map((reward, index) => {
-                const isCollected = progress.collectedRewards.includes(reward.id);
+                const count = progress.collectedRewards[reward.id] || 0;
+                const isCollected = count > 0;
                 return (
                   <motion.div
                     key={reward.id}
@@ -106,12 +140,17 @@ export default function Collection() {
                       type: 'reward'
                     })}
                     className={`flex flex-col items-center justify-center 
-                               rounded-xl shadow-lg p-2 ${
+                               rounded-xl shadow-lg p-2 relative ${
                                  isCollected
                                    ? 'bg-gradient-to-br from-white to-primary-100 cursor-pointer'
                                    : 'bg-gray-200 opacity-50'
                                }`}
                   >
+                    {count > 0 && (
+                      <span className="absolute top-0 right-1 text-xs font-bold bg-fun-yellow text-white rounded-full px-1.5 py-0.5">
+                        ×{count}
+                      </span>
+                    )}
                     <span className="text-5xl md:text-6xl">
                       {isCollected ? reward.emoji : '❓'}
                     </span>
@@ -131,7 +170,8 @@ export default function Collection() {
               className="grid grid-cols-4 md:grid-cols-5 gap-3 p-2"
             >
               {junkItems.map((junk, index) => {
-                const isCollected = progress.collectedJunk.includes(junk.id);
+                const count = progress.collectedJunk[junk.id] || 0;
+                const isCollected = count > 0;
                 return (
                   <motion.div
                     key={junk.id}
@@ -147,12 +187,17 @@ export default function Collection() {
                       type: 'junk'
                     })}
                     className={`flex flex-col items-center justify-center 
-                               rounded-xl shadow-lg p-2 ${
+                               rounded-xl shadow-lg p-2 relative ${
                                  isCollected
                                    ? 'bg-gradient-to-br from-gray-100 to-gray-200 cursor-pointer'
                                    : 'bg-gray-200 opacity-50'
                                }`}
                   >
+                    {count > 0 && (
+                      <span className="absolute top-0 right-1 text-xs font-bold bg-gray-500 text-white rounded-full px-1.5 py-0.5">
+                        ×{count}
+                      </span>
+                    )}
                     <span className="text-5xl md:text-6xl">
                       {isCollected ? junk.emoji : '❓'}
                     </span>
@@ -216,6 +261,12 @@ export default function Collection() {
               </h2>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showWorm && (
+          <WormPopup eatenItems={wormEatenItems} onClose={handleWormClose} />
         )}
       </AnimatePresence>
     </div>

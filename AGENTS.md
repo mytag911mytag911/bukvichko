@@ -2,7 +2,7 @@
 
 **Project Name (working title):** Adventure of Bukvichko (working title)
 
-**Version:** 0.1
+**Version:** 0.2
 
 **Language:** Bulgarian
 
@@ -128,6 +128,9 @@ Example:
 
 - words.json
 - rewards.json
+- junkItems.json
+- shopItems.json
+- tradeRecipes.json
 - settings.json
 
 No database is required.
@@ -279,13 +282,15 @@ Planned for future versions:
 - Haptic feedback on mobile
 - Landscape mode support
 
-### Shop / Trading System (planned)
+### Shop / Trading System (v0.2 — implemented)
 
 **Concept:** Children collect small rewards (bonbons, cookies, etc.) and trade them for bigger prizes (robots, cars, treasure map pieces).
 
+**Status:** v0.2 implemented. 6 robot images in `src/data/images/Shop/`. Snake Junk Eater and Shop/Trading System fully functional.
+
 **Data Model Changes:**
 - `collectedRewards` changes from `string[]` → `Record<string, number>` (reward ID → quantity)
-- New file: `shopItems.json` — big tradeable prizes (robots, cars, treasure maps, etc.)
+- New file: `shopItems.json` — 6 collectible robot characters
 - New file: `tradeRecipes.json` — defines trade costs (e.g., 3 🍬 + 2 🍪 = 🤖)
 - New `tradedItems` field in `GameProgress`
 
@@ -294,7 +299,7 @@ Planned for future versions:
 - New `tradeRewards()` function — deducts small items, gives big item
 
 **New Pages:**
-- Shop page — shows tradeable items with costs
+- Shop page — shows 6 robots with costs and rarity
 - Tap a prize → see what's needed → confirm trade if enough items
 
 **UI Updates:**
@@ -304,12 +309,12 @@ Planned for future versions:
 
 **Example Trade Recipe:**
 ```json
-{ "id": "s1", "name": "Робот", "emoji": "🤖", "cost": { "r1": 3, "r2": 2 } }
+{ "id": "s1", "name": "Син Робот", "emoji": "🤖", "cost": { "r1": 3, "r2": 2 } }
 ```
 
-**Estimated Effort:** ~2-3 hours
+**Estimated Effort:** ~6-8 hours (see RELEASE_v0.2_PLAN.md)
 
-The architecture should support these additions without major refactoring.
+The architecture supports these additions without major refactoring.
 
 ---
 
@@ -390,6 +395,23 @@ The project should become a reusable foundation for future educational games.
 - [x] Progress visualization (color-coded letter grid showing learned/seen/unknown)
 - [x] Settings page (volume control, reset progress)
 - [x] MP3 letter sounds on Progress page (click any letter to hear pronunciation)
+
+# 17. Implementation Status (v0.2)
+
+## Completed
+
+- [x] Data model change: `collectedRewards`/`collectedJunk` from `string[]` → `Record<string, number>`
+- [x] Migration logic for old localStorage data
+- [x] Helper functions: `getTotalRewardCount()`, `getTotalJunkCount()`, `getRewardCount()`, `getJunkCount()`
+- [x] Snake Junk Eater - animated worm popup when junk > rewards on Collection page
+- [x] Shop/Trading System - buy 6 robot characters with collected rewards
+- [x] Shop page with item grid, cost display, buy flow, rarity badges
+- [x] Trade functions: `canAfford()`, `tradeRewards()`, `getTradedItemCount()`
+- [x] Collection page shows quantities (×N) on each item
+- [x] Main menu "🛒 Магазин" button
+- [x] `/shop` route added to App.tsx
+- [x] Eating/gulp sound effects added to audio.ts
+- [x] 6 AI-generated robot PNG images in `src/data/images/Shop/`
 
 ## Current Word List (src/data/words.json)
 
@@ -512,20 +534,28 @@ src/
     words.json         - 55 words with letters/emojis
     rewards.json       - 20 collectible rewards
     junkItems.json     - 20 funny junk items
+    shopItems.json     - 6 collectible robot characters
+    tradeRecipes.json  - Trade cost definitions
     sounds/            - 30 MP3 files for letter pronunciation (А.mp3–Я.mp3, ь.mp3)
+    images/
+      Shop/            - 6 robot PNG images for the shop (BlueBot, BlueGlassBot, GreenBot, GreyBot, OrangeBot, RedBot)
+  components/
+    WormPopup.tsx      - Animated snake/worm modal for junk eating
   pages/
     MainMenu.tsx       - Home page with navigation
     LearningMode.tsx   - Click letters to learn
     ChallengeMode.tsx  - Quiz with rewards
     ChallengeSelect.tsx- Word count selection
-    Collection.tsx     - View collected items
+    Collection.tsx     - View collected items with quantities
     MemoryGame.tsx     - Memory matching game
     Settings.tsx       - Volume control, reset progress
     Progress.tsx       - Color-coded letter grid
+    Shop.tsx           - Shop page with trading system
   utils/
-    storage.ts         - LocalStorage management
+    storage.ts         - LocalStorage management + trade functions
     audio.ts           - TTS + MP3 playback + sound effects
     helpers.ts         - Shuffle/random utilities
+    worm.ts            - Worm feeding logic
 ```
 
 ## Notes for Next Session
