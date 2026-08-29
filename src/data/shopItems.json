@@ -1,8 +1,8 @@
 [
-  { "id": "s1", "name": "Син Робот", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/BlueBot.png", "category": "robot", "rarity": "common" },
-  { "id": "s2", "name": "Робот с Очила", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/BlueGlassBot.png", "category": "robot", "rarity": "common" },
-  { "id": "s3", "name": "Зелен Робот", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/GreenBot.png", "category": "robot", "rarity": "common" },
-  { "id": "s4", "name": "Сив Робот", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/GreyBot.png", "category": "robot", "rarity": "uncommon" },
-  { "id": "s5", "name": "Оранжев Робот", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/OrangeBot.png", "category": "robot", "rarity": "uncommon" },
-  { "id": "s6", "name": "Червен Робот", "emoji": "🤖", "image": "/bukvichko/src/data/images/Shop/RedBot.png", "category": "robot", "rarity": "rare" }
+  { "id": "s1", "name": "Син Робот", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/BlueBot.png", "category": "robot", "rarity": "common" },
+  { "id": "s2", "name": "Робот с Очила", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/BlueGlassBot.png", "category": "robot", "rarity": "common" },
+  { "id": "s3", "name": "Зелен Робот", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/GreenBot.png", "category": "robot", "rarity": "common" },
+  { "id": "s4", "name": "Сив Робот", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/GreyBot.png", "category": "robot", "rarity": "uncommon" },
+  { "id": "s5", "name": "Оранжев Робот", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/OrangeBot.png", "category": "robot", "rarity": "uncommon" },
+  { "id": "s6", "name": "Червен Робот", "emoji": "🤖", "image": "/bukvichko/data/images/Shop/RedBot.png", "category": "robot", "rarity": "rare" }
 ]
