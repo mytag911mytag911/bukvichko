@@ -8,6 +8,16 @@
 
 ---
 
+> **⚠️ MANDATORY RULE: This file (AGENTS.md) must be updated after EVERY code change.**
+> Whenever you modify code, data, configuration or documentation in this project, you MUST also update this file in the same commit:
+> - Add new features to the relevant "Implementation Status" checklist.
+> - Update the "File Structure" section if files were added/renamed/removed.
+> - Update the "Deployment" section if the deployment process changed.
+> - Update "Notes for Next Session" with any new user preferences or known issues.
+> A change is not considered complete until AGENTS.md reflects it.
+
+---
+
 # 1. Vision
 
 The goal of this project is to create a fun, colorful and interactive web game that helps children around the age of four learn the Bulgarian alphabet.
@@ -412,6 +422,7 @@ The project should become a reusable foundation for future educational games.
 - [x] `/shop` route added to App.tsx
 - [x] Eating/gulp sound effects added to audio.ts
 - [x] 6 AI-generated robot PNG images in `public/data/images/Shop/` (must be in `public/` for Vite to serve them)
+- [x] Memory Game awards 1 random reward (same pool as Challenge mode) on winning — shown in the 🏆 win popup, saved via `addReward()`, once per win (guarded by `rewardGrantedRef`, reset on restart)
 
 ## Current Word List (src/data/words.json)
 
@@ -453,6 +464,41 @@ The project is already a git repository, initialized and connected to a remote o
 
 **Remote URL:** https://github.com/mytag911mytag911/bukvichko.git
 **Branch:** `main`
+
+## Deployment (IMPORTANT — read before investigating "broken" deploys)
+
+The live site is at: **https://mytag911mytag911.github.io/bukvichko/**
+
+### How deployment works
+
+- **Deployment is FULLY AUTOMATIC via GitHub Actions.** The workflow file is `.github/workflows/deploy.yml` (committed in the repo — note: folder names starting with `.` are hidden from some search tools, so always check with `git ls-tree` or `git show` if a search finds nothing).
+- On every `git push` to `main`, the workflow:
+  1. Checks out the code on a **Linux** runner (`ubuntu-latest`)
+  2. Runs `npm ci` + `npm run build`
+  3. Deploys `dist/` to GitHub Pages via `actions/deploy-pages`
+- **No manual deployment step is needed.** Just push to `main` and wait a few minutes.
+- Deployment runs can be inspected at: `https://api.github.com/repos/mytag911mytag911/bukvichko/actions/runs` (public API, no auth needed) — check `head_sha`, `status`, `conclusion`.
+- GitHub Pages + CDN caching: HTML may take ~1-10 minutes to update after a successful run. Use a cache-busting query string (`?v=random`) when checking, and hard-refresh (Ctrl+F5) when testing, since the PWA service worker may serve a cached version.
+
+### ⚠️ FALSE ALARM WARNING — bundle hash mismatch between local and live builds
+
+**A local Windows build and the CI Linux build produce DIFFERENT hashed filenames** (e.g. local `index-Byu5hXmM.js` vs live `index-_M-NmY20.js`) for the SAME code. This is normal — platform differences change the content hash.
+
+- **Do NOT conclude the deployment is broken just because the live bundle name differs from the local `dist/` name.** The names always differ; compare CONTENT instead (e.g. download the live JS and search for a distinctive string from the new code).
+- `index.html` may reference a different JS hash than the local build while the CSS hash matches — this is also normal, not a "mixed" deployment.
+
+### ⚠️ The `gh-pages` branch is LEGACY — do not deploy to it
+
+- A `gh-pages` branch exists on the remote (used before the Actions workflow was added).
+- **GitHub Pages is configured to use the GitHub Actions source, NOT the `gh-pages` branch.** Pushing to `gh-pages` has NO effect on the live site.
+- Do not build or push anything to `gh-pages`. If needed, it can be deleted safely (`git push origin --delete gh-pages`).
+- Old lesson: a manual `gh-pages` push was once mistaken for a successful deploy — only the Actions run matters.
+
+### Deploy checklist
+
+1. `git push` to `main`
+2. Wait ~2-5 minutes for the Actions run to finish (`conclusion: success`)
+3. Verify the live site serves the new code by checking for a NEW distinctive string from the change — not by comparing bundle filenames
 
 ### Common Git Commands
 
@@ -525,6 +571,10 @@ git merge <branch-name>
 ## File Structure
 
 ```
+.github/
+  workflows/
+    deploy.yml        - GitHub Actions: auto-builds and deploys to GitHub Pages on push to main
+
 public/
   data/
     images/
@@ -552,7 +602,7 @@ src/
     ChallengeMode.tsx  - Quiz with rewards
     ChallengeSelect.tsx- Word count selection
     Collection.tsx     - View collected items with quantities
-    MemoryGame.tsx     - Memory matching game
+    MemoryGame.tsx     - Memory matching game (awards 1 random reward on win)
     Settings.tsx       - Volume control, reset progress
     Progress.tsx       - Color-coded letter grid
     Shop.tsx           - Shop page with trading system
@@ -569,3 +619,6 @@ src/
 - Ensure all Bulgarian letters have at least one word
 - Check that emojis match words correctly
 - Test on mobile devices for touch responsiveness
+- **Deployment is automatic on push to `main` via GitHub Actions — never deploy to the `gh-pages` branch (legacy, unused). See the "Deployment" section above.**
+- **Remember the MANDATORY RULE at the top: update this AGENTS.md file with every code change.**
+- 2026-10-11: Memory Game now awards 1 random reward per win (same pool as Challenge mode). User confirmed approval of: 1 prize per win, shown inside the existing 🏆 popup, and Memory wins counting toward `challengeWins`/`totalGamesPlayed` stats.
