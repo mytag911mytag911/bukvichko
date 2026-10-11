@@ -1,8 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import rewards from '../data/rewards.json';
+import { addReward } from '../utils/storage';
 import { playLetterSound, playCorrectSound } from '../utils/audio';
 import { shuffleArray } from '../utils/helpers';
+import type { Reward } from '../types';
 
 const BULGARIAN_LETTERS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШ'.split('');
 
@@ -33,6 +36,8 @@ export default function MemoryGame() {
   const [moves, setMoves] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+  const [currentReward, setCurrentReward] = useState<Reward | null>(null);
+  const rewardGrantedRef = useRef(false);
 
   useEffect(() => {
     setCards(createDeck());
@@ -40,6 +45,12 @@ export default function MemoryGame() {
 
   useEffect(() => {
     if (cards.length > 0 && cards.every(card => card.isMatched)) {
+      if (!rewardGrantedRef.current) {
+        rewardGrantedRef.current = true;
+        const reward = rewards[Math.floor(Math.random() * rewards.length)] as Reward;
+        setCurrentReward(reward);
+        addReward(reward.id);
+      }
       setGameWon(true);
     }
   }, [cards]);
@@ -100,6 +111,8 @@ export default function MemoryGame() {
     setMoves(0);
     setIsProcessing(false);
     setGameWon(false);
+    setCurrentReward(null);
+    rewardGrantedRef.current = false;
   }, []);
 
   return (
@@ -197,6 +210,28 @@ export default function MemoryGame() {
               <p className="text-xl text-primary-500">
                 Намери всички двойки за {moves} хода!
               </p>
+              {currentReward && (
+                <motion.div
+                  initial={{ scale: 0, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                  className="flex flex-col items-center gap-1 mt-2"
+                >
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.15, 1],
+                      rotate: [0, 8, -8, 0],
+                    }}
+                    transition={{ repeat: Infinity, duration: 1.2, delay: 0.6 }}
+                    className="text-7xl"
+                  >
+                    {currentReward.emoji}
+                  </motion.div>
+                  <p className="text-xl font-bold text-fun-green">
+                    Твоя награда: {currentReward.name} +1
+                  </p>
+                </motion.div>
+              )}
               <div className="flex gap-4 mt-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
