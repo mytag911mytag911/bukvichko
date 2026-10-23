@@ -52,11 +52,9 @@ The kid trades 1–2 collected small rewards to unlock country flags. Unlocked f
 
 ## Roadmap — All World Flags via Emoji (aim agreed 2026-10-23)
 
-The 12 starter flags are only Phase 1. The goal is **every world flag (~250 countries)** rendered as emoji — still mobile-only, zero graphics.
+**Phase 2 ✅ DONE (2026-10-23):** expanded 12 → **50 flags**. Added `continent` field (Европа 26, Азия 10, Африка 4, Америка 9, Океания 1); unlock grid now grouped by continent sections with emoji headers (🏰🏯🦁🗽🏄). All costs flat 1 reward (cycled across the 9 common rewards 🍬🍪🎈🍦🍭🧁🎨🍰🧲). Original IDs f1–f12 untouched → kids' already-unlocked flags remain valid. New countries include Испания, Португалия, Швеция, Норвегия, Полша, Чехия, Украйна, САЩ, Канада, Бразилия, Аржентина, Индия, Тайланд, Южна Корея, Мароко, Кения, Австралия… Bulgarian names & first letters manually verified.
 
-**Phase 2 (next, ~2–3 h — data-heavy):** expand to ~50 of the most kid-recognizable countries. Entries can be largely auto-generated from ISO 3166 codes: emoji = regional-indicator letters of the code, `letter` = first letter of the Bulgarian name, `cost: { "r1": 1 }` (agreed flat cost). ⚠️ **Bulgarian country names need human review** — auto-translation is unreliable (e.g. САЩ, Обединеното кралство, Обединени арабски емирства).
-
-**Phase 3:** remaining ~200 countries. `flags.json` grows to ~250 entries (~40 KB — negligible).
+**Phase 3 (remaining ~200):** the rest of the world. Entries can be largely auto-generated from ISO 3166 codes: emoji = regional-indicator letters of the code, `letter` = first letter of the Bulgarian name, `cost: { "r1": 1 }`. ⚠️ **Bulgarian country names need human review** — auto-translation is unreliable (e.g. Обединеното кралство, Обединени арабски емирства). `flags.json` grows to ~250 entries (~60 KB — negligible).
 
 **Emoji caveats (verify per flag on iOS + Android):**
 - Subdivision flags (England 🏴󠁧󠁢󠁥󠁮󠁧󠁿, Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿, Wales 🏴󠁧󠁢󠁷󠁬󠁳󠁿) render on iOS but NOT on most Android versions → use 🇬🇧 for England instead; skip the others.
@@ -64,8 +62,8 @@ The 12 starter flags are only Phase 1. The goal is **every world flag (~250 coun
 - Taiwan 🇹🇼, Ukraine 🇺🇦 and standard ISO country flags are safe.
 
 **UI at scale:**
-- Unlock grid: group by continent sections (Европа 🌍, Азия, Африка, Америка, Океания) with big emoji headers — scrollable grid already mobile-friendly.
-- Wheel: **no change needed** — only unlocked flags become sectors, so the kid controls how crowded the wheel gets.
+- Unlock grid: grouped by continent sections (done in Phase 2 — Европа 🏰, Азия 🏯, Африка 🦁, Америка 🗽, Океания 🏄); scrollable grid is mobile-friendly.
+- Wheel: **no change needed** — only unlocked flags become sectors, so the kid controls how crowded the wheel gets. Winner selection: uniform random `Math.floor(Math.random() * n)` among unlocked flags, every spin independent.
 - Storage: `unlockedFlags: string[]` scales fine (~1.5 KB for 250 IDs).
 - Quiz: duplicate answer letters across countries are fine (accepted) — each quiz asks about one country only.
 

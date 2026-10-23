@@ -31,6 +31,15 @@ const SECTOR_COLORS = [
 
 type View = 'unlock' | 'wheel' | 'quiz';
 
+const CONTINENT_ORDER = ['Европа', 'Азия', 'Африка', 'Америка', 'Океания'];
+const CONTINENT_EMOJI: Record<string, string> = {
+  Европа: '🏰',
+  Азия: '🏯',
+  Африка: '🦁',
+  Америка: '🗽',
+  Океания: '🏄',
+};
+
 const flags = flagsData as unknown as Flag[];
 
 export default function FlagsGame() {
@@ -191,7 +200,7 @@ export default function FlagsGame() {
         >
           {view === 'quiz' ? '❓ Коя буква?' : view === 'wheel' ? '🎡 Колелото' : '🚩 Флагове'}
         </motion.h1>
-        <div className="w-12 text-lg md:text-xl font-bold text-primary-500 text-right">
+        <div className="w-16 text-lg md:text-xl font-bold text-primary-500 text-right">
           {unlockedFlags.length}/{flags.length}
         </div>
       </div>
@@ -199,40 +208,51 @@ export default function FlagsGame() {
       {view === 'unlock' && (
         <>
           <div className="flex-1 overflow-auto">
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-3 p-2">
-              {flags.map((flag, index) => {
-                const unlocked = unlockedIds.includes(flag.id);
-                return (
-                  <motion.div
-                    key={flag.id}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => { playClickSound(); handleUnlock(flag); }}
-                    className={`relative border-2 rounded-2xl p-3 flex flex-col items-center gap-1 cursor-pointer shadow-md ${
-                      unlocked
-                        ? 'bg-gradient-to-br from-green-100 to-green-200 border-green-300'
-                        : 'bg-gradient-to-br from-white to-primary-100 border-primary-200'
-                    }`}
-                  >
-                    {unlocked && (
-                      <span className="absolute top-1 right-2 text-sm">✅</span>
-                    )}
-                    <div className={`text-5xl md:text-6xl ${unlocked ? '' : 'grayscale opacity-40'}`}>
-                      {flag.emoji}
-                    </div>
-                    <span className="text-sm md:text-base font-bold text-gray-700 text-center">
-                      {flag.countryBG}
-                    </span>
-                    <span className="text-xs md:text-sm text-gray-600">
-                      {unlocked ? 'Открит!' : getCostDisplay(flag)}
-                    </span>
-                  </motion.div>
-                );
-              })}
-            </div>
+            {CONTINENT_ORDER.map(continent => {
+              const group = flags.filter(f => f.continent === continent);
+              if (group.length === 0) return null;
+              return (
+                <div key={continent} className="mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-primary-600 mb-2 px-1">
+                    {CONTINENT_EMOJI[continent]} {continent}
+                  </h2>
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-3 p-2">
+                    {group.map((flag, index) => {
+                      const unlocked = unlockedIds.includes(flag.id);
+                      return (
+                        <motion.div
+                          key={flag.id}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: Math.min(index * 0.05, 0.6) }}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => { playClickSound(); handleUnlock(flag); }}
+                          className={`relative border-2 rounded-2xl p-3 flex flex-col items-center gap-1 cursor-pointer shadow-md ${
+                            unlocked
+                              ? 'bg-gradient-to-br from-green-100 to-green-200 border-green-300'
+                              : 'bg-gradient-to-br from-white to-primary-100 border-primary-200'
+                          }`}
+                        >
+                          {unlocked && (
+                            <span className="absolute top-1 right-2 text-sm">✅</span>
+                          )}
+                          <div className={`text-5xl md:text-6xl ${unlocked ? '' : 'grayscale opacity-40'}`}>
+                            {flag.emoji}
+                          </div>
+                          <span className="text-sm md:text-base font-bold text-gray-700 text-center">
+                            {flag.countryBG}
+                          </span>
+                          <span className="text-xs md:text-sm text-gray-600">
+                            {unlocked ? 'Открит!' : getCostDisplay(flag)}
+                          </span>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <motion.div

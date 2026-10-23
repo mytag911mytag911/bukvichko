@@ -29,7 +29,7 @@ Educational web game (React + TypeScript + Vite + Tailwind + Framer Motion) that
 - **Challenge Mode** — illustration + 3 letter options; correct → reward, wrong → junk; ends after chosen word count (5/10/15/20).
 - **Memory Game** — 16 cards (8 pairs), flip to match letters; awards 1 random reward on win.
 - **Shop** — trade collected small rewards for 6 robot characters (see `tradeRecipes.json`).
-- **Flags Wheel Game** — trade 1 reward to unlock a country flag (12 flags, `flags.json`); spin a free unlimited wheel of unlocked flags → answer which Bulgarian letter the country's name starts with (3 options); correct → reward, wrong → junk.
+- **Flags Wheel Game** — trade 1 reward to unlock a country flag (50 flags grouped by continent, `flags.json`); spin a free unlimited wheel of unlocked flags (winner = uniform random among unlocked) → answer which Bulgarian letter the country's name starts with (3 options); correct → reward, wrong → junk.
 - **Collection** — view rewards/junk with quantities; Snake Junk Eater popup when junk > rewards.
 - **Progress** — color-coded letter grid (learned/seen/unknown); click a letter to hear its MP3.
 - **Settings** — volume control, reset progress.
@@ -78,6 +78,7 @@ Educational web game (React + TypeScript + Vite + Tailwind + Framer Motion) that
 - [x] `/flags` route + "🚩 Флагове" main-menu button
 - [x] Flag costs flattened to agreed flat 1 reward per flag (2026-10-23)
 - [x] Build verified (`npm run build` passes); **awaiting user evaluation** — if rejected, follow the Removal Plan in `docs/PLAN_flags_game.md` (2 files delete + 4 small reverts; feature is fully isolated)
+- [x] **Phase 2 (2026-10-23): expanded 12 → 50 flags** — new `continent` field, grid grouped by continent sections (Европа/Азия/Африка/Америка/Океания), all costs flat 1 reward; original flag IDs f1–f12 unchanged (already-unlocked flags stay valid)
 
 ## Next Steps
 
@@ -89,7 +90,7 @@ Educational web game (React + TypeScript + Vite + Tailwind + Framer Motion) that
 
 ### Priority: Medium
 
-- [ ] Flags Phase 2: expand toward all world flags via emoji — roadmap in `docs/PLAN_flags_game.md`
+- [ ] Flags Phase 3: expand toward all world flags (~200 remaining) — roadmap in `docs/PLAN_flags_game.md`
 - [ ] Increase number of words per letter (more variety)
 - [ ] Add hover sound on all buttons
 - [ ] Add transition animations between pages
@@ -156,7 +157,7 @@ src/
   types/index.ts              - TypeScript types
   data/
     words.json                - 55 words with letters/emojis
-    flags.json                - 12 country flags for the Flags Wheel Game (emoji, Bulgarian name, letter, cost)
+    flags.json                - 50 country flags for the Flags Wheel Game (emoji, Bulgarian name, letter, continent, flat 1-reward cost)
     rewards.json              - 20 collectible rewards
     junkItems.json            - 20 funny junk items
     shopItems.json            - 6 collectible robot characters

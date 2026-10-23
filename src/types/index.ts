@@ -36,6 +36,7 @@ export interface Flag {
   emoji: string;
   countryBG: string;
   letter: string;
+  continent: string;
   cost: Record<string, number>;
 }
 
