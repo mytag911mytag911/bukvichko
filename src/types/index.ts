@@ -31,6 +31,14 @@ export interface TradeRecipe {
   [rewardId: string]: number;
 }
 
+export interface Flag {
+  id: string;
+  emoji: string;
+  countryBG: string;
+  letter: string;
+  cost: Record<string, number>;
+}
+
 export interface GameProgress {
   learnedLetters: string[];
   challengeWins: number;
@@ -38,6 +46,7 @@ export interface GameProgress {
   collectedRewards: Record<string, number>;
   collectedJunk: Record<string, number>;
   tradedItems: Record<string, number>;
+  unlockedFlags: string[];
   totalGamesPlayed: number;
 }
 

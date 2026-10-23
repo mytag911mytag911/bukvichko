@@ -1,0 +1,14 @@
+[
+  { "id": "f1",  "emoji": "🇧🇬", "countryBG": "България",  "letter": "Б", "cost": { "r1": 1 } },
+  { "id": "f2",  "emoji": "🇫🇷", "countryBG": "Франция",   "letter": "Ф", "cost": { "r2": 1 } },
+  { "id": "f3",  "emoji": "🇩🇪", "countryBG": "Германия",  "letter": "Г", "cost": { "r3": 1 } },
+  { "id": "f4",  "emoji": "🇮🇹", "countryBG": "Италия",    "letter": "И", "cost": { "r7": 1 } },
+  { "id": "f5",  "emoji": "🇹🇷", "countryBG": "Турция",    "letter": "Т", "cost": { "r8": 1 } },
+  { "id": "f6",  "emoji": "🇷🇺", "countryBG": "Русия",     "letter": "Р", "cost": { "r11": 1 } },
+  { "id": "f7",  "emoji": "🇬🇧", "countryBG": "Англия",    "letter": "А", "cost": { "r12": 1 } },
+  { "id": "f8",  "emoji": "🇯🇵", "countryBG": "Япония",    "letter": "Я", "cost": { "r15": 1 } },
+  { "id": "f9",  "emoji": "🇨🇳", "countryBG": "Китай",     "letter": "К", "cost": { "r19": 1 } },
+  { "id": "f10", "emoji": "🇪🇬", "countryBG": "Египет",    "letter": "Е", "cost": { "r1": 1 } },
+  { "id": "f11", "emoji": "🇲🇽", "countryBG": "Мексико",   "letter": "М", "cost": { "r2": 1 } },
+  { "id": "f12", "emoji": "🇳🇱", "countryBG": "Холандия",  "letter": "Х", "cost": { "r3": 1 } }
+]

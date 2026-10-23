@@ -70,6 +70,18 @@ export default function MainMenu() {
         </motion.button>
 
         <motion.button
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.75 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/flags')}
+          className="game-button bg-gradient-to-r from-fun-pink to-fun-purple text-shadow"
+        >
+          🚩 Флагове
+        </motion.button>
+
+        <motion.button
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}

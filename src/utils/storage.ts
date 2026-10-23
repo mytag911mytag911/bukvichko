@@ -1,5 +1,6 @@
 import { GameProgress, GameSettings } from '../types';
 import tradeRecipes from '../data/tradeRecipes.json';
+import flags from '../data/flags.json';
 
 const PROGRESS_KEY = 'bukvichko_progress';
 const SETTINGS_KEY = 'bukvichko_settings';
@@ -11,6 +12,7 @@ const defaultProgress: GameProgress = {
   collectedRewards: {},
   collectedJunk: {},
   tradedItems: {},
+  unlockedFlags: [],
   totalGamesPlayed: 0,
 };
 
@@ -38,6 +40,10 @@ function migrateProgress(progress: any): GameProgress {
 
   if (!progress.tradedItems) {
     progress.tradedItems = {};
+  }
+
+  if (!Array.isArray(progress.unlockedFlags)) {
+    progress.unlockedFlags = [];
   }
 
   if (!progress.collectedRewards || typeof progress.collectedRewards !== 'object') {
@@ -149,6 +155,46 @@ export function tradeRewards(shopItemId: string): boolean {
 export function getTradedItemCount(shopItemId: string): number {
   const progress = getProgress();
   return progress.tradedItems[shopItemId] || 0;
+}
+
+export function canAffordFlag(flagId: string): boolean {
+  const flag = flags.find(f => f.id === flagId);
+  if (!flag) return false;
+  const progress = getProgress();
+  return Object.entries(flag.cost).every(([rewardId, needed]) => {
+    const owned = progress.collectedRewards[rewardId] || 0;
+    return owned >= needed;
+  });
+}
+
+export function tradeFlag(flagId: string): boolean {
+  const flag = flags.find(f => f.id === flagId);
+  if (!flag) return false;
+
+  const progress = getProgress();
+  if (progress.unlockedFlags.includes(flagId)) return false;
+  if (!canAffordFlag(flagId)) return false;
+
+  Object.entries(flag.cost).forEach(([rewardId, needed]) => {
+    progress.collectedRewards[rewardId] -= needed;
+    if (progress.collectedRewards[rewardId] <= 0) {
+      delete progress.collectedRewards[rewardId];
+    }
+  });
+
+  progress.unlockedFlags.push(flagId);
+  saveProgress(progress);
+  return true;
+}
+
+export function isFlagUnlocked(flagId: string): boolean {
+  const progress = getProgress();
+  return progress.unlockedFlags.includes(flagId);
+}
+
+export function getUnlockedFlags(): string[] {
+  const progress = getProgress();
+  return progress.unlockedFlags;
 }
 
 export function getSettings(): GameSettings {

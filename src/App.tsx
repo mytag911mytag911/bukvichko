@@ -8,6 +8,7 @@ import MemoryGame from './pages/MemoryGame';
 import Settings from './pages/Settings';
 import Progress from './pages/Progress';
 import Shop from './pages/Shop';
+import FlagsGame from './pages/FlagsGame';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/flags" element={<FlagsGame />} />
         </Routes>
       </div>
     </Router>
